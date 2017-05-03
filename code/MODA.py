@@ -10,32 +10,24 @@ from nyc_geoclient import Geoclient
 import sys as _sys
 import numpy as _np
 
-try:
-    import cx_Oracle as _cx
-except:
-    print 'cx_oracle module not found: skipping DataBridge Connection.'
 
 
-__all__ = ('StaticData', 'DataBridge', 'GeoHelper')
+## public version of MODA helper functions
+
+__all__ = ('StaticData',  'GeoHelper')
+
 
 class StaticData:
+        
 
-    def __init__(self):
-        print " Static Data is pulled from //Chgoldfs01/FCTF/DATA DATA DATA/ by default."
-
-    def GetPLUTO(self,path="//Chgoldfs01/FCTF/DATA DATA DATA/Pluto/nyc_pluto_16v1" , boros= ['BK','BX','Mn','QN','SI']  ):
+    def GetPLUTO(self,path , boros= ['BK','BX','Mn','QN','SI']):
         """ Returns PLUTO dataset as a dataframe
 
         Keyword arguments:
         boros --- specify boroughs to include as a list, default ['BK','BX','Mn','QN','SI']
 
 
-        """
-
-        if path == "//Chgoldfs01/FCTF/DATA DATA DATA/Pluto/nyc_pluto_16v1":
-            print 'No path specified, using default path: ' + path
-
-
+        """     
         PLUTO = _pd.DataFrame()
 
         for b in boros:
@@ -51,36 +43,6 @@ class StaticData:
 
         return PLUTO
 
-
-
-class DataBridge:
-    _connection = None
-    _cur        = None
-
-    def __init__(self,user,pw):
-        """ creates a databridge connection object using inputted user credentials
-
-        Keyword arguments:
-        user --- self-explanatory
-        pw   --- self-explanatory
-
-        """
-
-        try:
-            self._connection = _cx.connect('%s/%s@mspuvd-ctwcprshrd1.cscx.nycnet:1755/ANAPRD.nycnet' % (user, pw))  ## sub in your server/schema string here
-            self._cur        = self._connection.cursor()
-        except TypeError:
-            print " please input databridge(username , pw) "
-
-
-    def QueryDB(self,query):
-        # open databridge connection
-        # query
-        self._cur.execute(query)
-        # save query to dataframe
-        df = _pd.DataFrame(self._cur.fetchall())
-        df.columns = [rec[0] for rec in self._cur.description]
-        return df
 
 
 
