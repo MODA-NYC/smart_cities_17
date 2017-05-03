@@ -9,7 +9,11 @@ import pandas as _pd
 from nyc_geoclient import Geoclient
 import sys as _sys
 import numpy as _np
-import cx_Oracle as _cx
+
+try:
+    import cx_Oracle as _cx
+except:
+    print 'cx_oracle module not found: skipping DataBridge Connection.'
 
 
 __all__ = ('StaticData', 'DataBridge', 'GeoHelper')
